@@ -13,10 +13,7 @@ import (
 type Server struct {
 	exampleUsecase    usecase.ExampleUsecase
 	userUsecase       usecase.UserUsecase
-<<<<<<< HEAD
 	assignmentUsecase usecase.AssignmentUsecase
-=======
->>>>>>> feat: upload multiple submission files
 	submissionUsecase usecase.SubmissionUsecase
 	echo              *echo.Echo
 	port              string
