@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/miun173/autograd/config"
+	"github.com/miun173/autograd/dto"
 	"github.com/miun173/autograd/model"
 	"github.com/miun173/autograd/utils"
 	"github.com/sirupsen/logrus"
@@ -57,7 +58,7 @@ func (s *submissionUsecase) Create(ctx context.Context, submission *model.Submis
 	return nil
 }
 
-func (s *submissionUsecase) Upload(ctx context.Context, upload *model.Upload) error {
+func (s *submissionUsecase) Upload(ctx context.Context, upload *dto.Upload) error {
 	if upload == nil {
 		return errors.New("invalid arguments")
 	}
