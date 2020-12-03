@@ -82,7 +82,7 @@ func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 
 func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	assignmentID := utils.StringToInt64(c.Param("assignmentID"))
-	pagination := utils.GeneratePaginationDTO(c.QueryParams())
+	pagination := utils.GeneratePaginationModel(c.QueryParams())
 	submissions, err := s.submissionUsecase.FindByAssignmentID(c.Request().Context(), pagination, assignmentID)
 	if err != nil {
 		logrus.Error(err)
