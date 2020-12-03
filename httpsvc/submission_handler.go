@@ -80,9 +80,27 @@ func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, newCursorRes(cursor, submissionRes, count))
 }
 
+func cursorRequestToModel(cr *model.CursorRequest) *model.Cursor {
+	return &model.Cursor{
+		Limit: cr.Limit,
+		Page:  cr.Page,
+		Sort:  cr.Sort,
+	}
+}
+
+func cursorModelToResponse(c *model.Cursor) *model.CursorResponse {
+	return &model.CursorResponse{
+		Limit: c.Limit,
+		Page:  c.Page,
+		Sort:  c.Sort,
+		Rows:  c.Rows,
+	}
+}
+
 func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	assignmentID := utils.StringToInt64(c.Param("assignmentID"))
-	cursor := utils.GenerateCursorModel(c.QueryParams())
+	cursorRequest := utils.GenerateCursorRequest(c.QueryParams())
+	cursor := cursorRequestToModel(cursorRequest)
 	submissions, err := s.submissionUsecase.FindByAssignmentID(c.Request().Context(), cursor, assignmentID)
 	if err != nil {
 		logrus.Error(err)
@@ -91,5 +109,5 @@ func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 
 	cursor.Rows = submissions
 
-	return c.JSON(http.StatusOK, cursor)
+	return c.JSON(http.StatusOK, cursorModelToResponse(cursor))
 }

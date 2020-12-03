@@ -54,3 +54,18 @@ func (c Cursor) GetTotalPage(count int64) int64 {
 
 	return totalPage
 }
+
+// CursorRequest ..
+type CursorRequest struct {
+	Limit int64
+	Page  int64
+	Sort  string
+}
+
+// CursorResponse ..
+type CursorResponse struct {
+	Limit int64       `json:"limit"`
+	Page  int64       `json:"page"`
+	Sort  string      `json:"sort"`
+	Rows  interface{} `json:"rows"`
+}
