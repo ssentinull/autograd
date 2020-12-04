@@ -64,8 +64,10 @@ type CursorRequest struct {
 
 // CursorResponse ..
 type CursorResponse struct {
-	Size int64       `json:"size"`
-	Page int64       `json:"page"`
-	Sort string      `json:"sort"`
-	Data interface{} `json:"data"`
+	Size      int64       `json:"size"`
+	Page      int64       `json:"page"`
+	Sort      string      `json:"sort"`
+	TotalPage int64       `json:"totalPage"`
+	TotalData int64       `json:"totalData"`
+	Data      interface{} `json:"data"`
 }

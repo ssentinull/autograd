@@ -128,3 +128,17 @@ func getCursorFromContext(c echo.Context) model.Cursor {
 
 	return model.NewCursor(size, page, sort)
 }
+
+func calculateCursorOffsetValue(cursor *model.Cursor) int64 {
+	return (cursor.Page - 1) * cursor.Size
+}
+
+func calculateCursorTotalPageValue(cursor *model.Cursor) int64 {
+	totalData := cursor.TotalData / cursor.Size
+	remainderData := cursor.TotalData % cursor.Size
+	if remainderData != 0 {
+		totalData++
+	}
+
+	return totalData
+}
