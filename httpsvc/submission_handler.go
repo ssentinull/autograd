@@ -80,22 +80,22 @@ func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, newCursorRes(cursor, submissionRes, count))
 }
 
-func cursorRequestToModel(cr *model.CursorRequest) *model.Cursor {
+func cursorRequestToModel(r *model.CursorRequest) *model.Cursor {
 	return &model.Cursor{
-		Size: cr.Size,
-		Page: cr.Page,
-		Sort: cr.Sort,
+		Size: r.Size,
+		Page: r.Page,
+		Sort: r.Sort,
 	}
 }
 
-func cursorModelToResponse(c *model.Cursor) *model.CursorResponse {
+func cursorModelToResponse(m *model.Cursor) *model.CursorResponse {
 	return &model.CursorResponse{
-		Size:      c.Size,
-		Page:      c.Page,
-		Sort:      c.Sort,
-		Data:      c.Data,
-		TotalPage: c.TotalPage,
-		TotalData: c.TotalData,
+		Size:      m.Size,
+		Page:      m.Page,
+		Sort:      m.Sort,
+		Data:      m.Data,
+		TotalPage: m.TotalPage,
+		TotalData: m.TotalData,
 	}
 }
 
