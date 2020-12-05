@@ -112,17 +112,3 @@ func (s *submissionUsecase) FindAllByAssignmentID(ctx context.Context, cursor mo
 
 	return
 }
-
-func (s *submissionUsecase) FindCursorByAssignmentID(ctx context.Context, cursor *model.Cursor, assignmentID int64) (submissions []*model.Submission, err error) {
-	submissions, err = s.submissionRepo.FindCursorByAssignmentID(ctx, cursor, assignmentID)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"ctx":          utils.Dump(ctx),
-			"cursor":       cursor,
-			"assignmentID": assignmentID,
-		}).Error(err)
-		return nil, err
-	}
-
-	return
-}

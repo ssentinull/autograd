@@ -80,46 +80,44 @@ func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	return c.JSON(http.StatusOK, newCursorRes(cursor, submissionRes, count))
 }
 
-func cursorRequestToModel(r *model.CursorRequest) *model.Cursor {
-	return &model.Cursor{
-		Size: r.Size,
-		Page: r.Page,
-		Sort: r.Sort,
-	}
+type cursorResponse struct {
+	Size      int64       `json:"size"`
+	Page      int64       `json:"page"`
+	Sort      string      `json:"sort"`
+	TotalPage int64       `json:"totalPage"`
+	TotalData int64       `json:"totalData"`
+	Data      interface{} `json:"data"`
 }
 
-func cursorModelToResponse(m *model.Cursor) *model.CursorResponse {
-	return &model.CursorResponse{
-		Size:      m.Size,
-		Page:      m.Page,
-		Sort:      m.Sort,
-		Data:      m.Data,
-		TotalPage: m.TotalPage,
-		TotalData: m.TotalData,
+func newSubmissionResponses(submissions []*model.Submission) (submissionRes []*submissionResponse) {
+	for _, submission := range submissions {
+		submissionRes = append(submissionRes, submissionModelToResponse(submission))
+	}
+
+	return
+}
+
+func newCursorResponse(c model.Cursor, data interface{}, count int64) *cursorResponse {
+	return &cursorResponse{
+		Size:      c.GetSize(),
+		Page:      c.GetPage(),
+		Sort:      c.GetSort(),
+		TotalPage: c.GetTotalPage(count),
+		TotalData: count,
+		Data:      data,
 	}
 }
 
 func (s *Server) handleGetAssignmentSubmission(c echo.Context) error {
 	assignmentID := utils.StringToInt64(c.Param("assignmentID"))
-	cursorRequest := generateCursorRequest(c.QueryParams())
-	cursor := cursorRequestToModel(cursorRequest)
-	cursor.Offset = calculateCursorOffsetValue(cursor)
-	submissions, err := s.submissionUsecase.FindAllByAssignmentID(c.Request().Context(), assignmentID)
+	cursor := getCursorFromContext(c)
+	submissions, count, err := s.submissionUsecase.FindAllByAssignmentID(c.Request().Context(), cursor, assignmentID)
 	if err != nil {
 		logrus.Error(err)
 		return responseError(c, err)
 	}
 
-	cursor.TotalData = int64(len(submissions))
-	cursor.TotalPage = calculateCursorTotalPageValue(cursor)
+	submissionRes := newSubmissionResponses(submissions)
 
-	submissions, err = s.submissionUsecase.FindCursorByAssignmentID(c.Request().Context(), cursor, assignmentID)
-	if err != nil {
-		logrus.Error(err)
-		return responseError(c, err)
-	}
-
-	cursor.Data = submissions
-
-	return c.JSON(http.StatusOK, cursorModelToResponse(cursor))
+	return c.JSON(http.StatusOK, newCursorResponse(cursor, submissionRes, count))
 }

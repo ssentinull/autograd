@@ -14,10 +14,6 @@ func NewCursor(size, page int64, sort string) Cursor {
 
 // GetPage ..
 func (c Cursor) GetPage() int64 {
-	if c.page < 1 {
-		return 1
-	}
-
 	return c.page
 }
 
@@ -53,21 +49,4 @@ func (c Cursor) GetTotalPage(count int64) int64 {
 	}
 
 	return totalPage
-}
-
-// CursorRequest ..
-type CursorRequest struct {
-	Size int64
-	Page int64
-	Sort string
-}
-
-// CursorResponse ..
-type CursorResponse struct {
-	Size      int64       `json:"size"`
-	Page      int64       `json:"page"`
-	Sort      string      `json:"sort"`
-	TotalPage int64       `json:"totalPage"`
-	TotalData int64       `json:"totalData"`
-	Data      interface{} `json:"data"`
 }
